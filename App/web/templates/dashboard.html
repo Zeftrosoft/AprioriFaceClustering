@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <h2>Face clustering And Apriori  
+      <a class="btn btn-warning" onclick="clustering()">
+        <i class="fas fa-play"></i> Start Clustering
+      </a>
+    </h2> 
+    </div>
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-primary card-outline card-tabs">
+              <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                  {% for row in data.data%}
+                  <li class="nav-item">
+                    <a class="nav-link" id="user-{{row[0]}}" data-toggle="pill" href="#user-content-{{row[0]}}" role="tab" aria-controls="user-{{row[0]}}-tab" aria-selected="true" onclick="getInvoiceData({{row[1]}})">
+                      {{'Customer '+row[1] if row[1]!='-1' else 'Unknown'}}
+                    </a>
+                  </li>
+                  {%endfor%}
+                  <!-- End-->
+                </ul> 
+              </div>
+              <div class="card-body" style="padding-left:0; padding-right:0;"> 
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                  {% for row in data.data%}
+                  <!-- for loop data.data-->
+                  <div class="tab-pane " id="user-content-{{row[0]}}" role="tabpanel" aria-labelledby="user-content-{{row[0]}}-tab">
+                    <div class="col-12">
+                      <div class="card card-danger card-outline card-tabs">
+                        <div class="card-header p-0 pt-1">
+                          <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist"> 
+                            <li class="nav-item">
+                              <a class="nav-link active" id="tab1" data-toggle="pill" href="#invoice-{{row[0]}}" role="tab" aria-controls="invoice-{{row[0]}}-tab" aria-selected="true">Invoice</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="tab2" data-toggle="pill" href="#montag-{{row[0]}}" role="tab" aria-controls="montag-{{row[0]}}-tab" aria-selected="false">Montag</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="tab3" data-toggle="pill" href="#prediction-{{row[0]}}" role="tab" aria-controls="prediction-{{row[0]}}-tab" aria-selected="false">Prediction</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="card-body">
+                          <div class="tab-content" id="custom-tabs-one-tabContent">
+                            <div class="tab-pane fade show active" id="invoice-{{row[0]}}" role="tabpanel" aria-labelledby="invoice-{{row[0]}}-content-tab">
+                              <div class="row">
+                                <div class="col-md-3">
+                                  <div class="card card-success card-outline">
+                                    <div class="card-header">
+                                      <h3 class="card-title">Invoices</h3>
+                                      <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    
+                                    <div class="card-body p-0">
+                                      <ul class="nav nav-pills flex-column" id="InvoiceList-{{row[1]}}">
+                                        
+                                      </ul>
+                                    </div>
+                                   
+                                  </div>
+                                </div>
+                                <div class="col-md-9">
+                                  <div class="card card-success card-outline">
+                                    <div class="card-header">
+                                      <h3 class="card-title">Invoice No :- </h3>
+                                      <span style="color:rgb(12, 83, 5)"><b id='InvoiceNo-{{row[1]}}'>-</b></span>
+                                    </div>
+                                    <div class="card-body p-0">
+                                      <div class="float-right">
+                                        <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
+                                      </div>
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                          <ul class="nav nav-pills flex-column" id='InvoiceItemlist-{{row[1]}}'></ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <img class="img-fluid" src="" alt="Customer Image" id="InvoiceImage-{{row[1]}}">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="montag-{{row[0]}}" role="tabpanel" aria-labelledby="montag-{{row[0]}}-content-tab">
+                              <a href="#" data-toggle="lightbox" data-title="Montag">
+                                <img src="{{row[2]}}" class="img-fluid mb-2" alt="sample" id="montag-{{row[0]}}-image">
+                              </a>
+                            </div>
+                            <div class="tab-pane fade" id="prediction-{{row[0]}}" role="tabpanel" aria-labelledby="prediction-{{row[0]}}-content-tab">
+                              <a class="btn btn-success"  onclick="prediction({{row[1]}})">
+                                <i class="fas fa-play"></i> Start Prediction
+                              </a>    
+                            </div>
+                          </div>  
+                        </div>
+                      </div>
+                    </div> 
+                  </div>
+                  {%endfor%}
+                  <!-- End--> 
+                </div> 
+              </div>
+            </div>
+              <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>  
+  </div>
+  <!-- /.content-wrapper -->
+
+  
+{% endblock %}
+<!-- {% block foter %}{% endblock %} -->
