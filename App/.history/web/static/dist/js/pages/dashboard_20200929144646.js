@@ -43,7 +43,7 @@ function getInvoiceData(id){
         }
         else {
           invoice_data = json.data
-          initInvoices(id)
+          initInvoices()
         }
     },
     error: function (data) {
@@ -53,10 +53,10 @@ function getInvoiceData(id){
   });
 }
 
-function initInvoices(invId) {
+function initInvoices() {
   console.log('invoice Data')
   
-  $(invoiceListId+'-'+invId).html('')
+  $(invoiceListId).html('')
   var invoices = invoice_data.map(function (inv) {
     return inv[1]
   })
