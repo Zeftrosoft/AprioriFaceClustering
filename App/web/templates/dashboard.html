@@ -102,7 +102,13 @@
                             <div class="tab-pane fade" id="prediction-{{row[0]}}" role="tabpanel" aria-labelledby="prediction-{{row[0]}}-content-tab">
                               <a class="btn btn-success"  onclick="prediction({{row[1]}})">
                                 <i class="fas fa-play"></i> Start Prediction
-                              </a>    
+                              </a> 
+                                 <div class="card-body p-0">
+                                   <h3>{{row[1]}}</h3>
+                                    <ul class="nav nav-pills flex-column" id="PredictionList-{{row[1]}}">
+                                      
+                                    </ul>
+                                  </div>
                             </div>
                           </div>  
                         </div>

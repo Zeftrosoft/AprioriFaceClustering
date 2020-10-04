@@ -109,7 +109,7 @@ class DBHelper:
                 FROM invoice
                 INNER JOIN invoice_item
                 ON invoice.inv_no = invoice_item.inv_no 
-                WHERE invoice.lid =lid """        
+                WHERE invoice.lid = {} """.format(lid)        
     self.connect()
     item = self.cursor.execute(query)
     items = list(item)

@@ -4,6 +4,7 @@ var current_lid = ''
 var montage_data = []
 var invoiceListId = "#InvoiceList"
 var invoiceItemListId = "#InvoiceItemlist"
+var predictionListId = "#PredictionList"
 var invoiceNoId = "#InvoiceNo"
 var invoiceImageId = "#InvoiceImage"
 
@@ -127,7 +128,8 @@ function getPredictData(id){
         else {
         predict_data = json.data
         
-        console.log(JSON.parse(predict_data));
+        console.log();
+        fillPredictionList(JSON.parse(predict_data), id)
         }
     },
     error: function (data) {
@@ -139,6 +141,36 @@ function getPredictData(id){
 
 function prediction(lid){
   getPredictData(lid)
+}
+
+function fillPredictionList(predictions, current_lid) {
+  var list = []
+  console.log(predictions[0]);
+  var pred_list = $.grep(predictions, function (row, indx) {
+    //console.log(row.support, row.support >= 0.1);
+    return row.support >= 0.1
+  })
+  pred_list = pred_list.sort(function (a, b) { return b.support - a.support})
+  console.log(pred_list[0]);
+  // image_path=$('#InvoiceImage').prop('src', invItems[0][0]);
+  // console.log(image_path)
+  $.each(pred_list, function (indx, row) {
+    var items = row.itemsets.reduce(function (sum, x, i) {
+      return sum = sum + ', ' +x
+    })
+    items = items+' | Support: '+row.support
+    var html = `
+      <li class="nav-item" style="border-bottom: 1px solid #dfdfdf">
+        <a href="#" class="nav-link" style="color:red">
+          ${(items)}
+        </a>
+      </li>
+    `             
+    list.push(html)   
+  })
+ console.log('Current LId',current_lid);
+  
+  $(predictionListId+'-'+current_lid).html(list)
 }
 
 
@@ -161,7 +193,7 @@ function getClustertData(){
     },
     success: function (json) {
         if (!json.status) {
-          console.error('Serverside Error While Geting Montage Data');
+          console.error('Serverside Error While Getting Montage Data');
           console.error(json.msg)
         }
         else {
