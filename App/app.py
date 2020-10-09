@@ -58,6 +58,20 @@ def apriori(lid):
     else:
        return init_res
 
+@app.route('/prediction/all', methods=['GET'])
+def aprioriAll():
+    init_res = {
+        'status': False,
+        'data' : [],
+        'title': 'All Prediction'
+    }
+    res = result.predictAll()
+    # print(res)
+    if len(res)>0:
+        return res
+    else:
+       return init_res
+
 @app.route('/startclustering', methods=['GET'])
 def faceclust():
     init_res = {

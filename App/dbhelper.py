@@ -122,3 +122,21 @@ class DBHelper:
     self.conn.commit()
     self.conn.close()
     return items_list
+
+  def getallinvoiceitem(self):
+    query = """SELECT invoice_item.item_name, invoice.inv_no
+                FROM invoice
+                INNER JOIN invoice_item
+                ON invoice.inv_no = invoice_item.inv_no"""      
+    self.connect()
+    item = self.cursor.execute(query)
+    items = list(item)
+    sorter = sorted(items, key=itemgetter(1))
+    grouper = groupby(sorter, key=itemgetter(1))
+    res = {k: list(map(itemgetter(0), v)) for k, v in grouper}
+    items_list = []
+    for row in res.items():
+        items_list.append(row[1])
+    self.conn.commit()
+    self.conn.close()
+    return items_list

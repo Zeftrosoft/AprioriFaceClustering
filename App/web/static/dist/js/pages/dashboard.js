@@ -5,9 +5,11 @@ var montage_data = []
 var invoiceListId = "#InvoiceList"
 var invoiceItemListId = "#InvoiceItemlist"
 var predictionListId = "#PredictionList"
+var allPredictionListId = "#AllPrediction"
 var invoiceNoId = "#InvoiceNo"
 var invoiceImageId = "#InvoiceImage"
 
+var minimum_Support = 0.2
 $(function () {
   $(document).on('click', '[data-toggle="lightbox"]', function(event) {
     event.preventDefault();
@@ -139,8 +141,43 @@ function getPredictData(id){
   });
 }
 
+function getAllPredictionData(){
+  $.ajax({
+    cache: false,
+    type: 'GET',
+    url:   getPredictDataUrl()+'/all',
+    xhrFields: {
+        // The 'xhrFields' property sets additional fields on the XMLHttpRequest.
+        // This can be used to set the 'withCredentials' property.
+        // Set the value to 'true' if you'd like to pass cookies to the server.
+        // If this is enabled, your server must respond with the header
+        // 'Access-Control-Allow-Credentials: true'.
+        withCredentials: false
+    },
+    success: function (json) {
+        if (!json.status) {
+          console.error('Serverside Error While Geting Prediction Data');
+          console.error(json.msg)
+        }
+        else {
+        predict_data = json.data
+        
+        console.log();
+        fillAllPredictionList(JSON.parse(predict_data))
+        }
+    },
+    error: function (data) {
+        console.log("Error While Getting Prediction Data");
+        console.log(data);
+    }
+  });
+}
+
 function prediction(lid){
   getPredictData(lid)
+}
+function predictAll(){
+  getAllPredictionData()
 }
 
 function fillPredictionList(predictions, current_lid) {
@@ -148,7 +185,7 @@ function fillPredictionList(predictions, current_lid) {
   console.log(predictions[0]);
   var pred_list = $.grep(predictions, function (row, indx) {
     //console.log(row.support, row.support >= 0.1);
-    return row.support >= 0.1
+    return row.support >= minimum_Support
   })
   pred_list = pred_list.sort(function (a, b) { return b.support - a.support})
   console.log(pred_list[0]);
@@ -171,6 +208,34 @@ function fillPredictionList(predictions, current_lid) {
  console.log('Current LId',current_lid);
   
   $(predictionListId+'-'+current_lid).html(list)
+}
+function fillAllPredictionList(predictions) {
+  var list = []
+  console.log(predictions[0]);
+  var pred_list = $.grep(predictions, function (row, indx) {
+    //console.log(row.support, row.support >= 0.1);
+    return row.support >= minimum_Support
+  })
+  pred_list = pred_list.sort(function (a, b) { return b.support - a.support})
+  console.log(pred_list[0]);
+  // image_path=$('#InvoiceImage').prop('src', invItems[0][0]);
+  // console.log(image_path)
+  $.each(pred_list, function (indx, row) {
+    var items = row.itemsets.reduce(function (sum, x, i) {
+      return sum = sum + ', ' +x
+    })
+    items = items+' | Support: '+row.support
+    var html = `
+      <li class="nav-item" style="border-bottom: 1px solid #dfdfdf">
+        <a href="#" class="nav-link" style="color:red">
+          ${(items)}
+        </a>
+      </li>
+    `             
+    list.push(html)   
+  })
+  
+  $(allPredictionListId).html(list)
 }
 
 
